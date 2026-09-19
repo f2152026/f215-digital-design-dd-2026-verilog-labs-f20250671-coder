@@ -3,9 +3,17 @@
 
 module tb;
 
-  // TODO: declare the inputs and outputs
+  // Declare the inputs and outputs matching the lut.v parameters
+  // DEPTH=4 means sel is 2 bits ($clog2(4)-1:0). WIDTH=8 means dout is 8 bits.
+  reg  [1:0] t_sel;
+  wire [7:0] t_dout;
 
-  // TODO: instantiate DUT here
+  // Instantiate the lut module. 
+  // Name the instance DUT so $dumpvars below can bind to it.
+  lut DUT (
+    .sel(t_sel),
+    .dout(t_dout)
+  );
 
   // Waveform dump configuration (DO NOT CHANGE)
   string vcd_file;
@@ -17,11 +25,16 @@ module tb;
   end
 
   initial begin
-    // TODO: apply different input combinations
-
+    // Apply all 4 input combinations for a DEPTH=4 ROM
+    t_sel = 2'd0; #5;
+    t_sel = 2'd1; #5;
+    t_sel = 2'd2; #5;
+    t_sel = 2'd3; #5;
+    $finish;
   end
 
+  // Monitor updated to track sel and dout in decimal format
   initial
-    $monitor($time, " I0=%b I1=%b S=%b | Y=%b", t_i0, t_i1, t_s, t_y); // change as required
+    $monitor($time, " sel=%d | dout=%d", t_sel, t_dout);
 
 endmodule
